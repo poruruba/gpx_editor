@@ -85,7 +85,6 @@ var vue_options = {
             }
         },
         image_open_files: function(files){
-            console.log(files);
             if( files.length > 0 ){
                 const reader = new FileReader()
                 reader.addEventListener("load", async () => {
@@ -155,7 +154,7 @@ var vue_options = {
             }
         },
         point_selecting: function(e){
-            console.log(e);
+//            console.log(e);
             map.setView([this.line[this.table_index].lat, this.line[this.table_index].lng]);
             this.point_selected();
         },
@@ -206,20 +205,20 @@ var vue_options = {
                     this.mode_change("view");
                     return resolve();
                 }).on('addpoint', (e) => {
-                    console.log(e.point);
+//                    console.log(e.point);
                 }).on('addline', (e) => {
-                    console.log(e);
+//                    console.log(e);
                     this.line = e.line.getLatLngs();
-                    console.log(this.line);
+//                    console.log(this.line);
                 }).on('click', (e) =>{
-                    console.log(e);
+//                    console.log(e);
                     var index = this.search_point(e.latlng.lat, e.latlng.lng);
                     if( index >= 0 ){
                         this.table_index = index;
                         this.point_selected();
                     }
                 }).on('error', (e) =>{
-                    console.error(e);
+//                    console.error(e);
                     return resolve();
                 }).addTo(map);
             });
@@ -257,7 +256,7 @@ var vue_options = {
                 }
                 this.gpx_json.gpx.trk.trkseg.trkpt.push(item);   
             }
-            console.log(JSON.stringify(this.gpx_json));
+//            console.log(JSON.stringify(this.gpx_json));
 
             return json2xml(this.gpx_json, {compact: true});
         },
@@ -292,7 +291,7 @@ var vue_options = {
         map = L.map('mapcontainer', {
             zoomControl: true,
         }).on('click', (e) =>{
-            console.log(e);
+//            console.log(e);
             if( this.current_mode == 'new' || this.current_mode == 'modify'){
                 this.target_set_point(e.latlng.lat, e.latlng.lng);
             }
@@ -360,8 +359,6 @@ async function get_exif(image){
                 return resolve(null);
             const lat = gpsLatitude[0]/1 + gpsLatitude[1]/60 + gpsLatitude[2]/3600
             const lon = gpgLongitude[0]/1 + gpgLongitude[1]/60 + gpgLongitude[2]/3600
-            console.log(`緯度=${lat}`)
-            console.log(`経度=${lon}`)
             return resolve({ lat: lat, lng: lon });
         });
     });
