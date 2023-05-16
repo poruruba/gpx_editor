@@ -140,8 +140,9 @@
                   <label>from imagefile</label><comp_file v-bind:callback="image_open_files" accept=".jpg"></comp_file>
                   <img class="img-responsive" v-bind:src="image_source"><br>
                   <div class="form-inline">
-                    <label>lat</label> <input type="number" class="form-control" v-model.number="image_lat" readonly>
-                    <label>lng</label> <input type="number" class="form-control" v-model.number="image_lng" readonly>
+                    <label>lat</label> <input type="number" class="form-control" v-model.number="image_lat" readonly><br>
+                    <label>lng</label> <input type="number" class="form-control" v-model.number="image_lng" readonly><br>
+                    <label>datetime</label> <input type="text" class="form-control" v-model.number="image_datetime" readonly><br>
                   </div>
                 </div>
                 <div class="modal-footer">
