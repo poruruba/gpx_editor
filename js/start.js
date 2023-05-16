@@ -31,6 +31,7 @@ var vue_options = {
         table_index: -1,
         image_lat: 0.0,
         image_lng: 0.0,
+        image_datetime: 0,
         image_source: null,
         default_lat: 35.40,
         default_lng: 136.0,
@@ -41,6 +42,7 @@ var vue_options = {
         image_select_start: function(){
             this.image_lat = 0.0;
             this.image_lng = 0.0;
+            this.image_datetime = 0;
             this.image_source = null;
             this.dialog_open('#image_select_dialog');
         },
@@ -48,6 +50,8 @@ var vue_options = {
             if( this.image_lat == 0.0 || this.image_lng == 0x0 )
                 return;
 
+            if( this.image_datetime )
+                this.target_time = tim2datetime(new Date(this.image_datetime).getTime());
             this.target_set_point(this.image_lat, this.image_lng);
             map.setView([this.target_lat, this.target_lng], 14);
             this.dialog_close('#image_select_dialog');
@@ -99,6 +103,9 @@ var vue_options = {
                     this.image_source = reader.result;
                     this.image_lat = exif.lat;
                     this.image_lng = exif.lng;
+                    if( exif.datetime ){
+                        this.image_datetime = new Date(exif.datetime).toLocaleString();
+                    }
                 }, false);
                 reader.readAsDataURL(files[0]);
             }
@@ -356,13 +363,27 @@ async function imageLoad(url){
 async function get_exif(image){
     return new Promise((resolve, reject) =>{
         EXIF.getData(image, function () {
-            const gpsLatitude = EXIF.getTag(image, 'GPSLatitude')
-            const gpgLongitude = EXIF.getTag(image, 'GPSLongitude')
-            if( !gpsLatitude || !gpgLongitude )
+            const gpsLatitude = EXIF.getTag(image, 'GPSLatitude');
+            const gpsLongitude = EXIF.getTag(image, 'GPSLongitude');
+            var datetime = EXIF.getTag(image, "DateTimeOriginal");
+            if( !gpsLatitude || !gpsLongitude )
                 return resolve(null);
-            const lat = gpsLatitude[0]/1 + gpsLatitude[1]/60 + gpsLatitude[2]/3600
-            const lon = gpgLongitude[0]/1 + gpgLongitude[1]/60 + gpgLongitude[2]/3600
-            return resolve({ lat: lat, lng: lon });
+            const lat = gpsLatitude[0]/1 + gpsLatitude[1]/60 + gpsLatitude[2]/3600;
+            const lon = gpsLongitude[0]/1 + gpsLongitude[1]/60 + gpsLongitude[2]/3600;
+            if( datetime ){
+                var a = datetime.split(" ");
+                var a0 = a[0].split(':');
+                var a1 = a[1].split(':');
+                var d = new Date();
+                d.setFullYear(parseInt(a0[0], 10));
+                d.setMonth(parseInt(a0[1], 10) - 1);
+                d.setDate(parseInt(a0[2], 10));
+                d.setHours(parseInt(a1[0], 10));
+                d.setMinutes(parseInt(a1[1], 10));
+                d.setSeconds(parseInt(a1[2], 10));
+                datetime = d.getTime();
+            }
+            return resolve({ lat: lat, lng: lon, datetime: datetime });
         });
     });
 }
