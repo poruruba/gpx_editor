@@ -63,8 +63,8 @@
       </div>
       <hr>
       <div class="form-inline">
-        <span v-if="current_mode=='new' || current_mode=='modify'">
-          <span v-if="current_mode=='new'">
+        <span v-if="current_mode=='add' || current_mode=='modify'">
+          <span v-if="current_mode=='add'">
             <label>New</label>
           </span>
           <span v-if="current_mode=='modify'">
@@ -76,7 +76,7 @@
           <label>date</label> <input type="datetime-local" step="1" class="form-control" v-model="target_time">
           <button class="btn btn-default btn-sm" v-on:click="image_select_start">画像ファイルから位置情報を取得</button>
           <button class="btn btn-primary btn-lg" v-on:click="target_add">
-            <span v-if="current_mode=='new'">Add</span>
+            <span v-if="current_mode=='add'">Add</span>
             <span v-if="current_mode=='modify'">Modify</span>
           </button>
           <button class="btn btn-default btn-lg" v-on:click="target_cancel">Cancel</button>
@@ -109,6 +109,7 @@
         </div>
         <div class="col-xs-1"></div>
       </div>
+      <br>
 
 
       <div class="modal" id="file_select_dialog">
