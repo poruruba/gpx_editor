@@ -26,7 +26,7 @@ var vue_options = {
         target_lat: 0,
         target_lng: 0,
         target_ele: 0,
-        target_time: "",
+        target_time: tim2datetime(new Date().getTime()),
         current_mode: "idle",
         table_index: -1,
         image_lat: 0.0,
@@ -42,7 +42,7 @@ var vue_options = {
         image_select_start: function(){
             this.image_lat = 0.0;
             this.image_lng = 0.0;
-            this.image_datetime = 0;
+            this.image_datetime = new Date().toLocaleString();
             this.image_source = null;
             this.dialog_open('#image_select_dialog');
         },
@@ -117,7 +117,7 @@ var vue_options = {
 
             var latlng = map.getCenter();
             this.target_set_point(latlng.lat, latlng.lng);
-            this.target_time = tim2datetime(new Date().getTime());
+//            this.target_time = tim2datetime(new Date().getTime());
             this.target_ele = 0;
             
             this.mode_change("add");
