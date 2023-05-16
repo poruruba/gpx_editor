@@ -70,8 +70,8 @@
           <span v-if="current_mode=='modify'">
             <label>index</label> {{target_index + 1}}
           </span>
-          <label>lat</label> <input type="number" class="form-control" v-model.number="target_lat">
-          <label>lng</label> <input type="number" class="form-control" v-model.number="target_lng">
+          <label>lat</label> <input type="number" step="0.000001" class="form-control" v-model.number="target_lat">
+          <label>lng</label> <input type="number" step="0.000001" class="form-control" v-model.number="target_lng">
           <label>ele</label> <input type="number" class="form-control" v-model.number="target_ele">
           <label>date</label> <input type="datetime-local" step="1" class="form-control" v-model="target_time">
           <button class="btn btn-default btn-sm" v-on:click="image_select_start">画像ファイルから位置情報を取得</button>
