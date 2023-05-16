@@ -68,8 +68,10 @@ var vue_options = {
             var gpx_data = await this.line_export();
             file_save(gpx_data, "application/gpx+xml", "new_gpx.xml");
             if( this.line.length > 0){
-                localStorage.setItem('default_lat', this.line[0].lat);
-                localStorage.setItem('default_lng', this.line[0].lng);
+                this.default_lat = this.line[0].lat;
+                this.default_lng = this.line[0].lng;
+                localStorage.setItem('default_lat', this.default_lat);
+                localStorage.setItem('default_lng', this.default_lng);
             }
         },
         gpx_open_files: function(files){
