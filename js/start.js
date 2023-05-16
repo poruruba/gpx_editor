@@ -111,7 +111,7 @@ var vue_options = {
             this.target_time = tim2datetime(new Date().getTime());
             this.target_ele = 0;
             
-            this.mode_change("new");
+            this.mode_change("add");
         },
         target_add: async function(){
             var item = {
@@ -122,7 +122,7 @@ var vue_options = {
                     ele: this.target_ele
                 }
             };
-            if(this.current_mode == 'new')
+            if(this.current_mode == 'add')
                 this.line.push(item);
             else if( this.current_mode == 'modify')
                 this.line[this.target_index] = item;
@@ -139,7 +139,7 @@ var vue_options = {
                     target_marker.setRadius(0);
                     break;
                 }
-                case "new": {
+                case "add": {
                     target_marker.setRadius(10);
                     break;
                 }
@@ -201,7 +201,8 @@ var vue_options = {
                         lineCap: 'round'
                     }
                 }).on('loaded', (e) => {
-                    map.fitBounds(e.target.getBounds());
+                    if( this.current_mode == 'idle' || this.current_mode == 'view')
+                        map.fitBounds(e.target.getBounds());
                     this.mode_change("view");
                     return resolve();
                 }).on('addpoint', (e) => {
@@ -292,7 +293,7 @@ var vue_options = {
             zoomControl: true,
         }).on('click', (e) =>{
 //            console.log(e);
-            if( this.current_mode == 'new' || this.current_mode == 'modify'){
+            if( this.current_mode == 'add' || this.current_mode == 'modify'){
                 this.target_set_point(e.latlng.lat, e.latlng.lng);
             }
         });
