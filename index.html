@@ -97,7 +97,9 @@
           <button class="btn btn-default" v-on:click="target_new">New</button>
           <br><br>
           <table class="table table-striped">
-            <thead></thead>
+            <thead>
+              <tr><th>#</th><th>日時</th><th>Action</th></tr>
+            </thead>
             <tbody>
               <tr v-for="(item, index) in line" v-bind:class="line[index].selected ? 'success': ''">
                 <td><label><input type="radio" name="point" v-model="table_index" v-bind:value="index" v-on:change="point_selecting"> {{index + 1}}</input></label></td><td>{{toLocaleString(new Date(item.meta.time+'+0900').getTime())}}</td>
