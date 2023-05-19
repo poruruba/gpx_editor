@@ -242,8 +242,8 @@ var vue_options = {
         },
         line_sort: function(){
             this.line.sort((first, second) =>{
-                var first_time = new Date(first);
-                var second_time = new Date(second);
+                var first_time = new Date(new Date(first.meta.time+'+0900').getTime());
+                var second_time = new Date(new Date(second.meta.time+'+0900').getTime());
                 if( first_time < second_time ) return -1;
                 else if(first_time > second_time ) return 1;
                 return 0;
