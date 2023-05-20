@@ -47,17 +47,15 @@ var vue_options = {
             this.dialog_open('#image_select_dialog');
         },
         image_exif_select: function(){
-            if( this.image_lat == 0.0 || this.image_lng == 0x0 )
+            if( this.image_lat == 0.0 || this.image_lng == 0x0 ){
+                this.toast_show("latとlngを指定してください。");
                 return;
+            }
 
-            if( this.image_datetime )
-                this.target_time = tim2datetime(new Date(this.image_datetime).getTime());
+            this.target_time = tim2datetime(new Date(this.image_datetime).getTime());
             this.target_set_point(this.image_lat, this.image_lng);
             map.setView([this.target_lat, this.target_lng], 14);
             this.dialog_close('#image_select_dialog');
-        },
-        gpx_new_or_open: function(){
-            this.dialog_open('#file_select_dialog');
         },
         gpx_new_file: async function(){
             await this.gpx_new();
@@ -234,9 +232,10 @@ var vue_options = {
             });
         },
         line_reload: async function(){
-            await this.line_sort();
+            this.line_sort();
             var gpx_data = await this.line_export();
-            gpx.clearLayers();
+            if( gpx )
+                gpx.clearLayers();
 
             return this.line_load(gpx_data);
         },
@@ -244,9 +243,7 @@ var vue_options = {
             this.line.sort((first, second) =>{
                 var first_time = new Date(new Date(first.meta.time+'+0900').getTime());
                 var second_time = new Date(new Date(second.meta.time+'+0900').getTime());
-                if( first_time < second_time ) return -1;
-                else if(first_time > second_time ) return 1;
-                return 0;
+                return ( first_time - second_time );
             });
         },
         line_export: function(){
@@ -362,28 +359,32 @@ async function imageLoad(url){
 
 async function get_exif(image){
     return new Promise((resolve, reject) =>{
-        EXIF.getData(image, function () {
-            const gpsLatitude = EXIF.getTag(image, 'GPSLatitude');
-            const gpsLongitude = EXIF.getTag(image, 'GPSLongitude');
-            var datetime = EXIF.getTag(image, "DateTimeOriginal");
-            if( !gpsLatitude || !gpsLongitude )
-                return resolve(null);
-            const lat = gpsLatitude[0]/1 + gpsLatitude[1]/60 + gpsLatitude[2]/3600;
-            const lon = gpsLongitude[0]/1 + gpsLongitude[1]/60 + gpsLongitude[2]/3600;
-            if( datetime ){
-                var a = datetime.split(" ");
-                var a0 = a[0].split(':');
-                var a1 = a[1].split(':');
-                var d = new Date();
-                d.setFullYear(parseInt(a0[0], 10));
-                d.setMonth(parseInt(a0[1], 10) - 1);
-                d.setDate(parseInt(a0[2], 10));
-                d.setHours(parseInt(a1[0], 10));
-                d.setMinutes(parseInt(a1[1], 10));
-                d.setSeconds(parseInt(a1[2], 10));
-                datetime = d.getTime();
+        EXIF.getData(image, () => {
+            try{
+                const gpsLatitude = EXIF.getTag(image, 'GPSLatitude');
+                const gpsLongitude = EXIF.getTag(image, 'GPSLongitude');
+                var datetime = EXIF.getTag(image, "DateTimeOriginal");
+                if( !gpsLatitude || !gpsLongitude )
+                    return resolve(null);
+                const lat = gpsLatitude[0]/1 + gpsLatitude[1]/60 + gpsLatitude[2]/3600;
+                const lon = gpsLongitude[0]/1 + gpsLongitude[1]/60 + gpsLongitude[2]/3600;
+                if( datetime ){
+                    var a = datetime.split(" ");
+                    var a0 = a[0].split(':');
+                    var a1 = a[1].split(':');
+                    var d = new Date();
+                    d.setFullYear(parseInt(a0[0], 10));
+                    d.setMonth(parseInt(a0[1], 10) - 1);
+                    d.setDate(parseInt(a0[2], 10));
+                    d.setHours(parseInt(a1[0], 10));
+                    d.setMinutes(parseInt(a1[1], 10));
+                    d.setSeconds(parseInt(a1[2], 10));
+                    datetime = d.getTime();
+                }
+                return resolve({ lat: lat, lng: lon, datetime: datetime });
+            }catch(error){
+                reject(error);
             }
-            return resolve({ lat: lat, lng: lon, datetime: datetime });
         });
     });
 }
