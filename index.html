@@ -56,7 +56,7 @@
       </div>
 
       <div class="form-inline pull-right">
-        <label>新規作成・編集</label> <button class="btn btn-primary btn-lg" v-on:click="gpx_new_or_open">New</button>
+        <label>新規作成・編集</label> <button class="btn btn-primary btn-lg" v-on:click="dialog_open('#file_select_dialog')">New</button>
       </div>
       <div class="form-inline">
         <label>GPXファイル保存</label> <button class="btn btn-primary btn-lg" v-on:click="gpx_save">Save</button>
@@ -114,7 +114,7 @@
       <br>
 
 
-      <div class="modal" id="file_select_dialog">
+      <div class="modal fade" id="file_select_dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -132,7 +132,7 @@
         </div>
       </div>
       
-      <div class="modal" id="image_select_dialog">
+      <div class="modal fade" id="image_select_dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
