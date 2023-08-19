@@ -25,7 +25,7 @@ var vue_options = {
         target_index: 0,
         target_lat: 0,
         target_lng: 0,
-        target_ele: 0,
+        target_ele: 9,
         target_time: tim2datetime(new Date().getTime()),
         current_mode: "idle",
         table_index: -1,
@@ -116,7 +116,7 @@ var vue_options = {
             var latlng = map.getCenter();
             this.target_set_point(latlng.lat, latlng.lng);
 //            this.target_time = tim2datetime(new Date().getTime());
-            this.target_ele = 0;
+            this.target_ele = 9;
             
             this.mode_change("add");
         },
@@ -258,7 +258,7 @@ var vue_options = {
                         "_text": String(this.line[i].meta.ele)
                     },
                     "time": {
-                        "_text": this.line[i].meta.time.toISOString()
+                        "_text": this.line[i].meta.time.toISOString().replace(".000Z", "Z")
                     },
                 }
                 this.gpx_json.gpx.trk.trkseg.trkpt.push(item);   
